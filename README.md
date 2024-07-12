@@ -33,7 +33,7 @@ In the given repository you can find the following files:
 
 # User Guide  
 
-Please click [here](https://github.com/Garzdak/tSNE-cyt/guide) to read user guide.
+Please click [here](https://github.com/Garzdak/tSNE-cyt/tree/main/guide) to read user guide.
 
 
 ## Licensing
