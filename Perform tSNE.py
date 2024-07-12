@@ -10,8 +10,8 @@ import flowkit as fk
 from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.figure import Figure
 import os
-from layouts import Ui_appMainWindow
-from functions import cr_df, tsne # type: ignore
+from docs.layouts import Ui_appMainWindow
+from docs.functions import cr_df, tsne # type: ignore
 
 class MainWindow(QWidget):
     def __init__(self, *args, **kwargs):

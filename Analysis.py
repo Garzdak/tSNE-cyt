@@ -14,7 +14,7 @@ from matplotlib.patches import Ellipse
 
 from matplotlib.pyplot import cm
 
-from layouts import Ui_analysWindow, Ui_S_a_Window, Ui_C_a_Window, Ui_D_a_Window
+from docs.layouts import Ui_analysWindow, Ui_S_a_Window, Ui_C_a_Window, Ui_D_a_Window
 
 import os
 
