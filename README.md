@@ -1,7 +1,7 @@
 # t-SNE for cytometry data
 > t-Distributed Stochasitc Neighbor Embedding for visualizing high-dimentional cytometry data
 
-Simple project to analyse raw .fcs files, create t-SNE cluster plots and further analyse different subpopulations fount in it.
+Simple project to analyse raw ".fcs" files, create t-SNE cluster plots and further analyse different subpopulations found in it.
 
 ## Getting started
 
@@ -33,7 +33,7 @@ In the given repository you can find the following files:
 
 # User Guide  
 
-Please click [here](https://github.com/Garzdak/tSNE-cyt/guide)to read user guide.
+Please click [here](https://github.com/Garzdak/tSNE-cyt/guide) to read user guide.
 
 
 ## Licensing
