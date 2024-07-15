@@ -493,6 +493,7 @@ class DistWindow(QWidget):
         
         self.plots=[]
         
+    
         
         for i in range(0,ct):
             n = 'temp dist/'+str(i)+'.pkl'
