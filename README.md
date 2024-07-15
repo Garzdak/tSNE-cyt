@@ -36,7 +36,13 @@ In the given repository you can find the following files:
 
 Please click [here](https://github.com/Garzdak/tSNE-cyt/tree/main/guide) to read user guide.
 
+## For handling cytometry data the code relies on the following package
+
+[White, S., Quinn, J., Enzor, J., Staats, J., Mosier, S. M., Almarode, J., Denny, T. N., Weinhold, K. J., Ferrari, G., & Chan, C. (2021). FlowKit: A Python toolkit for integrated manual and automated cytometry analysis workflows. Frontiers in Immunology, 12. https://doi.org/10.3389/fimmu.2021.768541](https://www.frontiersin.org/articles/10.3389/fimmu.2021.768541/full)
+
 
 ## Licensing
 
 The code in this project is licensed under MIT license.
+
+
