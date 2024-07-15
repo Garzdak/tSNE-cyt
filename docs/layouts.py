@@ -155,9 +155,11 @@ class Ui_C_a_Window(object):
         self.cb_platform = QComboBox(CompareWindow)
 
         self.slider_x = QSlider(Qt.Orientation.Horizontal, CompareWindow)
-        self.slider_x.setRange(0, 100)       
+        self.slider_x.setRange(0, 100)      
+        self.slider_x.setValue(50) 
         self.slider_y = QSlider(Qt.Orientation.Horizontal, CompareWindow)
         self.slider_y.setRange(0, 100) 
+        self.slider_y.setValue(50) 
         self.slider_w = QSlider(Qt.Orientation.Horizontal, CompareWindow)
         self.slider_w.setRange(0, 100)
         self.slider_w.setValue(50)
@@ -181,6 +183,10 @@ class Ui_C_a_Window(object):
         
         self.savefig_button = QPushButton('Save Figure')
         layout.addWidget(self.savefig_button,4,0) 
+
+        self.savedat_button = QPushButton('Export Data')
+
+        
             
         layout.addWidget(QLabel('Select graph of interest:'), 0, 0)
         layout.addWidget(self.cb_platform, 1, 0)
@@ -197,6 +203,7 @@ class Ui_C_a_Window(object):
         layout.addWidget(self.slider_phi, 14, 0)
         layout.addWidget(self.save_but, 15, 0)
         layout.addWidget(self.dist_but, 16, 0)
+        layout.addWidget(self.savedat_button,17,0)
 
 class Ui_D_a_Window(object):
     def setupUi(self, DistWindow):
@@ -224,7 +231,7 @@ class Ui_D_a_Window(object):
         
         self.savefig1_button = QPushButton('Save Figure')
         layout.addWidget(self.savefig1_button,3,0)
-        
+
         self.savefig2_button = QPushButton('Save Figure')
         layout.addWidget(self.savefig2_button,8,0)
         

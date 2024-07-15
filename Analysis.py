@@ -10,6 +10,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
+import xlsxwriter
 
 
 from matplotlib.pyplot import cm
@@ -316,7 +317,8 @@ class CompareWindow(QWidget):
         self.c_ui.slider_phi.valueChanged.connect(self.el_phi) 
         self.c_ui.save_but.clicked.connect(self.save)
         self.c_ui.dist_but.clicked.connect(self.dist)
-        self.c_ui.savefig_button.clicked.connect(self.savefig)        
+        self.c_ui.savefig_button.clicked.connect(self.savefig)       
+        self.c_ui.savedat_button.clicked.connect(self.savedat) 
         
         self.tr = Xn
         
@@ -341,6 +343,35 @@ class CompareWindow(QWidget):
          
         # saving canvas at desired path
         self.c_ui.canvas1.print_figure(filePath)
+
+    def savedat(self):
+         
+        # selecting file path
+        filePath, _ = QFileDialog.getSaveFileName(self, "Export data", "",
+                         "xlsx(*.xlsx)")
+ 
+        # if file path is blank return back
+        if filePath == "":
+            return
+        
+        workbook = xlsxwriter.Workbook(filePath)
+        
+
+        cl_nm = list(self.plots[0].columns)
+
+        # saving plots at desired path
+        
+        for i in range(0,len(self.plots)):
+            worksheet = workbook.add_worksheet(str(i))
+            for j in range(0,len(cl_nm)):
+                row = 1
+                worksheet.write(0, j+1, cl_nm[j])
+                l_pl = self.plots[i][cl_nm[j]].to_list()
+                for item in l_pl:
+                    worksheet.write(row, j+1, item)
+                    row += 1
+        
+        workbook.close()
 
     def dr1(self):
         
@@ -520,6 +551,8 @@ class DistWindow(QWidget):
         
         self.d_ui.savefig1_button.clicked.connect(self.savefig1)
         self.d_ui.savefig2_button.clicked.connect(self.savefig2)
+
+        
         
     def savefig1(self):
          
@@ -533,6 +566,8 @@ class DistWindow(QWidget):
          
         # saving canvas at desired path
         self.d_ui.canvas.print_figure(filePath)    
+
+
         
         
     def savefig2(self):

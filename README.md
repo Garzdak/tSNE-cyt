@@ -13,6 +13,7 @@ Requirements:
 * seaborn
 * sklearn
 * flowkit
+* xlsxwriter
 
 In the given repository you can find the following files:
 
