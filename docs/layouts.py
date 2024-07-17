@@ -167,7 +167,7 @@ class Ui_C_a_Window(object):
         layout = QGridLayout()
 
         CompareWindow.setLayout(layout)
-        CompareWindow.setGeometry(100, 100, 400, 800)
+        CompareWindow.setGeometry(100, 100, 400, 1000)
         
         self.rb_kde = QRadioButton('KDE plot',CompareWindow)
         self.rb_scat = QRadioButton('Scatter plot',CompareWindow)
@@ -206,7 +206,7 @@ class Ui_C_a_Window(object):
         layout.addWidget(self.savefig_button,4,0) 
 
         self.savedat_button = QPushButton('Export Data')
-
+        self.outp = QLineEdit(CompareWindow)
         
             
         layout.addWidget(QLabel('Select graph of interest:'), 0, 0)
@@ -224,9 +224,10 @@ class Ui_C_a_Window(object):
         layout.addWidget(self.slider_h, 12, 0) 
         layout.addWidget(QLabel('Angle:'), 13, 0)
         layout.addWidget(self.slider_phi, 14, 0)
-        layout.addWidget(self.save_but, 15, 0)
-        layout.addWidget(self.dist_but, 16, 0)
-        layout.addWidget(self.savedat_button,17,0)
+        layout.addWidget(self.outp, 15, 0)
+        layout.addWidget(self.save_but, 16, 0)
+        layout.addWidget(self.dist_but, 17, 0)
+        layout.addWidget(self.savedat_button,18,0)
 
 class Ui_D_a_Window(object):
     def setupUi(self, DistWindow):

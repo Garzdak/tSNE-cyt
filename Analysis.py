@@ -335,6 +335,7 @@ class CompareWindow(QWidget):
         self.tr = Xn
         
         self.plots = []
+        self.names = []
         
 
         self.x_el = 50
@@ -374,7 +375,7 @@ class CompareWindow(QWidget):
         # saving plots at desired path
         
         for i in range(0,len(self.plots)):
-            worksheet = workbook.add_worksheet(str(i))
+            worksheet = workbook.add_worksheet(self.names[i])
             for j in range(0,len(cl_nm)):
                 row = 1
                 worksheet.write(0, j+1, cl_nm[j])
@@ -503,8 +504,10 @@ class CompareWindow(QWidget):
         X1 = Xctr.copy()
         X1['p'] = list(map(self.inellipse, X1['tsne_1'], X1['tsne_2']))
         _plot = X1[X1['p'] == True]
+        _out = self.c_ui.outp.text()
         
         self.plots.append(_plot)
+        self.names.append(_out)
         
         self.w4 = SucWindow()
         self.w4.show()  
@@ -513,6 +516,9 @@ class CompareWindow(QWidget):
         
         for i in range(0,len(self.plots)):
             self.plots[i].to_pickle('temp dist/'+str(i)+'.pkl')
+        
+        df_n = pd.DataFrame(self.names, columns=['Names'])
+        df_n.to_pickle('temp dist/Names.pkl')
             
         self.w3 = DistWindow()
         self.w3.show()  
@@ -538,10 +544,10 @@ class DistWindow(QWidget):
         ct = len(os.listdir('temp dist'))
         
         self.plots=[]
-        
+        self.names = pd.read_pickle('temp dist/Names.pkl')['Names'].to_list()
     
         
-        for i in range(0,ct):
+        for i in range(0,ct-1):
             n = 'temp dist/'+str(i)+'.pkl'
             self.plots.append(pd.read_pickle(n))
             os.remove(n)
@@ -616,17 +622,17 @@ class DistWindow(QWidget):
             ln, n_a = [],[]
             for i in range(0,len(self.plots)):
                 ln.append(len(self.plots[i]))
-                n_a.append(str(i))
+                n_a.append(self.names[i])
             n_e = {'Area': n_a, '# events': ln}
             df_n_e = pd.DataFrame(n_e)
-            sns.barplot(df_n_e, y="Area", x="# events", ax = ax, palette='magma')
+            sns.barplot(df_n_e, y="Area", x="# events", ax = ax, hue="Area", legend=False)
             
             
 
         else:
             for i in range(0,len(self.plots)):
                 c = next(color)
-                sns.kdeplot(data=self.plots[i], x=col, ax = ax, label = str(i), linewidth = 2, c= c)
+                sns.kdeplot(data=self.plots[i], x=col, ax = ax, label = self.names[i], linewidth = 2, c= c)
                 ax.legend()
         self.d_ui.canvas.draw()
         
@@ -645,7 +651,7 @@ class DistWindow(QWidget):
         for i in range(0,len(self.plots)):
             c = next(color)
             
-            sns.scatterplot(x=c1, y=c2, data=self.plots[i], ax=ax,s=3, color=c,label = str(i))
+            sns.scatterplot(x=c1, y=c2, data=self.plots[i], ax=ax,s=3, color=c,label = self.names[i])
             
         ax.legend()
         self.d_ui.canvas2.draw()
