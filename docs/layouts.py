@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication,QSlider,QComboBox, QFileDialog, QWidget,QListWidgetItem,QAbstractItemView, QGridLayout, QLineEdit, QPushButton, QListWidget,QLabel
+from PyQt5.QtWidgets import QApplication,QSlider,QComboBox,QAbstractItemView, QGridLayout, QLineEdit, QPushButton,QButtonGroup, QListWidget,QLabel, QRadioButton
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
@@ -106,20 +106,36 @@ class Ui_S_a_Window(object):
         self.dl = QPushButton('Delete condition')
         self.plt1 = QPushButton('Plot (Group 1)')
         self.plt2 = QPushButton('Plot (Group 2)')
+
+        self.p1=QButtonGroup()
+        self.rb_kde1 = QRadioButton('KDE plot')
+        self.rb_scat1 = QRadioButton('Scatter plot')
+        self.p1.addButton(self.rb_kde1)
+        self.p1.addButton(self.rb_scat1)
+
+        self.p2=QButtonGroup()
+        self.rb_kde2 = QRadioButton('KDE plot')
+        self.rb_scat2 = QRadioButton('Scatter plot')
+        self.p2.addButton(self.rb_kde2)
+        self.p2.addButton(self.rb_scat2)
+
+
             
         layout.addWidget(QLabel('Select graph of interest (Group 1):'), 0, 0)
         layout.addWidget(self.cb_platform, 1, 0)
         layout.addWidget(self.gr_list, 2, 0)
         layout.addWidget(self.adt, 3, 0)
         layout.addWidget(self.dl, 4, 0)
-        layout.addWidget(self.plt1, 5, 0)
+        layout.addWidget(self.rb_kde1, 5, 0)
+        layout.addWidget(self.rb_scat1, 6, 0)
+        layout.addWidget(self.plt1, 7, 0)
         
         self.save_button = QPushButton('Save')
-        layout.addWidget(self.save_button,7,0)
+        layout.addWidget(self.save_button,9,0)
         
         
         self.save_button2 = QPushButton('Save')
-        layout.addWidget(self.save_button2,7,1)
+        layout.addWidget(self.save_button2,9,1)
     
         
         self.cb_platform2 = QComboBox(SepWindow)
@@ -134,14 +150,16 @@ class Ui_S_a_Window(object):
         layout.addWidget(self.gr_list2, 2, 1)
         layout.addWidget(self.adt2, 3, 1)
         layout.addWidget(self.dl2, 4, 1)
-        layout.addWidget(self.plt2, 5, 1)
+        layout.addWidget(self.rb_kde2, 5, 1)
+        layout.addWidget(self.rb_scat2, 6, 1)
+        layout.addWidget(self.plt2, 7, 1)
         
 
         self.canvas1 = FigureCanvas(Figure(dpi = 150))
-        layout.addWidget(self.canvas1, 6,0)
+        layout.addWidget(self.canvas1, 8,0)
         
         self.canvas2 = FigureCanvas(Figure(dpi = 150))
-        layout.addWidget(self.canvas2, 6,1)
+        layout.addWidget(self.canvas2, 8,1)
 
 class Ui_C_a_Window(object):
     def setupUi(self, CompareWindow):
@@ -151,6 +169,9 @@ class Ui_C_a_Window(object):
         CompareWindow.setLayout(layout)
         CompareWindow.setGeometry(100, 100, 400, 800)
         
+        self.rb_kde = QRadioButton('KDE plot',CompareWindow)
+        self.rb_scat = QRadioButton('Scatter plot',CompareWindow)
+        self.rb_kde.setEnabled(True)
 
         self.cb_platform = QComboBox(CompareWindow)
 
@@ -189,8 +210,10 @@ class Ui_C_a_Window(object):
         
             
         layout.addWidget(QLabel('Select graph of interest:'), 0, 0)
-        layout.addWidget(self.cb_platform, 1, 0)
-        layout.addWidget(self.canvas1, 2,0)
+        layout.addWidget(self.rb_kde, 1, 0)
+        layout.addWidget(self.rb_scat, 2, 0)
+        layout.addWidget(self.cb_platform, 3, 0)
+        layout.addWidget(self.canvas1, 4,0)
         layout.addWidget(QLabel('Xc:'), 5, 0)
         layout.addWidget(self.slider_x, 6, 0)
         layout.addWidget(QLabel('Yc:'), 7, 0)

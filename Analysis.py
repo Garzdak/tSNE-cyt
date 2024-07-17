@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QFileDialog,QComboBox, QSlider, QWidget, QGridLayout, QPushButton, QListWidget,QLabel
+from PyQt5.QtWidgets import QApplication, QFileDialog,QComboBox, QWidget, QGridLayout, QPushButton,QLabel
 from pathlib import Path
 import matplotlib.ticker as ticker
 from PyQt5.QtCore import Qt
@@ -244,14 +244,20 @@ class SepWindow(QWidget):
             Xctr = Xn.loc[Xn['id'] == i]
             
             if len(pop)>1:
-                sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax[j],shade=True, thresh = 0.01, color = 'red')
+                if self.s_ui.rb_kde1.isChecked():
+                    sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax[j],fill=True, thresh = 0.01, color = 'red')
+                if self.s_ui.rb_scat1.isChecked():
+                    sns.scatterplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax[j],s=5)
                 ax[j].set_title(i)
                 ax[j].set_aspect('equal')
                 ax[j].xaxis.set_major_locator(ticker.NullLocator())
                 ax[j].yaxis.set_major_locator(ticker.NullLocator())
                 j+=1
             elif len(pop)==1: 
-                sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax,shade=True, thresh = 0.01, color = 'red')
+                if self.s_ui.rb_kde1.isChecked():
+                    sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax,fill=True, thresh = 0.01, color = 'red')
+                if self.s_ui.rb_scat1.isChecked():
+                    sns.scatterplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax,s=5)
                 ax.set_title(i)
                 ax.set_aspect('equal')
                 ax.xaxis.set_major_locator(ticker.NullLocator())
@@ -276,13 +282,19 @@ class SepWindow(QWidget):
             Xctr = Xn.loc[Xn['id'] == i]
             
             if len(pop)>1:
-                sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax[j],shade=True, thresh = 0.01, color = 'blue')
+                if self.s_ui.rb_kde2.isChecked():
+                    sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax[j],fill=True, thresh = 0.01, color = 'red')
+                if self.s_ui.rb_scat2.isChecked():
+                    sns.scatterplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax[j],s=5)
                 ax[j].set_title(i)
                 ax[j].set_aspect('equal')
                 ax[j].xaxis.set_major_locator(ticker.NullLocator())
                 ax[j].yaxis.set_major_locator(ticker.NullLocator())
             elif len(pop)==1: 
-                sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax,shade=True, thresh = 0.01, color = 'blue')
+                if self.s_ui.rb_kde2.isChecked():
+                    sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax,fill=True, thresh = 0.01, color = 'red')
+                if self.s_ui.rb_scat2.isChecked():
+                    sns.scatterplot(x='tsne_1', y='tsne_2', data=Xctr, ax=ax,s=5)
                 ax.set_title(i)
                 ax.set_aspect('equal')
                 ax.xaxis.set_major_locator(ticker.NullLocator())
@@ -386,7 +398,10 @@ class CompareWindow(QWidget):
         
         self.slg = Xctr
     
-        sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=self.ax,shade=True, thresh = 0.01, color = 'red')
+        if self.c_ui.rb_kde.isChecked():
+            sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=self.ax,fill=True, thresh = 0.01, color = 'red')
+        if self.c_ui.rb_scat.isChecked():
+            sns.scatterplot(x='tsne_1', y='tsne_2', data=Xctr, ax=self.ax,s=5)
         
         
         self.ax.set_title(pop)
@@ -541,7 +556,8 @@ class DistWindow(QWidget):
             self.d_ui.cb_platform.addItem(i)
             self.d_ui.cb2_platform.addItem(i)
             self.d_ui.cb3_platform.addItem(i)
-            
+        
+        self.d_ui.cb_platform.addItem("Number of events")    
            
         
         self.d_ui.cb_platform.activated.connect(self.draw)
@@ -596,11 +612,22 @@ class DistWindow(QWidget):
         color = iter(cm.rainbow(np.linspace(0, 1, len(self.plots))))
         
         
-        for i in range(0,len(self.plots)):
-            c = next(color)
-            sns.kdeplot(data=self.plots[i], x=col, ax = ax, label = str(i), linewidth = 2, c= c)
+        if col == "Number of events":
+            ln, n_a = [],[]
+            for i in range(0,len(self.plots)):
+                ln.append(len(self.plots[i]))
+                n_a.append(str(i))
+            n_e = {'Area': n_a, '# events': ln}
+            df_n_e = pd.DataFrame(n_e)
+            sns.barplot(df_n_e, y="Area", x="# events", ax = ax, palette='magma')
             
-        ax.legend()
+            
+
+        else:
+            for i in range(0,len(self.plots)):
+                c = next(color)
+                sns.kdeplot(data=self.plots[i], x=col, ax = ax, label = str(i), linewidth = 2, c= c)
+                ax.legend()
         self.d_ui.canvas.draw()
         
     def dotplot(self):
