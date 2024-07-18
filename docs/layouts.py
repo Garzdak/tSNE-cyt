@@ -203,7 +203,7 @@ class Ui_C_a_Window(object):
         
         
         self.savefig_button = QPushButton('Save Figure')
-        layout.addWidget(self.savefig_button,4,0) 
+        layout.addWidget(self.savefig_button,5,0) 
 
         self.savedat_button = QPushButton('Export Data')
         self.outp = QLineEdit(CompareWindow)
@@ -214,20 +214,20 @@ class Ui_C_a_Window(object):
         layout.addWidget(self.rb_scat, 2, 0)
         layout.addWidget(self.cb_platform, 3, 0)
         layout.addWidget(self.canvas1, 4,0)
-        layout.addWidget(QLabel('Xc:'), 5, 0)
-        layout.addWidget(self.slider_x, 6, 0)
-        layout.addWidget(QLabel('Yc:'), 7, 0)
-        layout.addWidget(self.slider_y, 8, 0)
-        layout.addWidget(QLabel('Width:'), 9, 0)
-        layout.addWidget(self.slider_w, 10, 0)
-        layout.addWidget(QLabel('Height:'), 11, 0)
-        layout.addWidget(self.slider_h, 12, 0) 
-        layout.addWidget(QLabel('Angle:'), 13, 0)
-        layout.addWidget(self.slider_phi, 14, 0)
-        layout.addWidget(self.outp, 15, 0)
-        layout.addWidget(self.save_but, 16, 0)
-        layout.addWidget(self.dist_but, 17, 0)
-        layout.addWidget(self.savedat_button,18,0)
+        layout.addWidget(QLabel('Xc:'), 6, 0)
+        layout.addWidget(self.slider_x, 7, 0)
+        layout.addWidget(QLabel('Yc:'), 8, 0)
+        layout.addWidget(self.slider_y, 9, 0)
+        layout.addWidget(QLabel('Width:'), 10, 0)
+        layout.addWidget(self.slider_w, 11, 0)
+        layout.addWidget(QLabel('Height:'), 12, 0)
+        layout.addWidget(self.slider_h, 13, 0) 
+        layout.addWidget(QLabel('Angle:'), 14, 0)
+        layout.addWidget(self.slider_phi, 15, 0)
+        layout.addWidget(self.outp, 16, 0)
+        layout.addWidget(self.save_but, 17, 0)
+        layout.addWidget(self.dist_but, 18, 0)
+        layout.addWidget(self.savedat_button,19,0)
 
 class Ui_D_a_Window(object):
     def setupUi(self, DistWindow):

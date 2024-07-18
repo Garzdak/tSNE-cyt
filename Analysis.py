@@ -551,6 +551,9 @@ class DistWindow(QWidget):
             n = 'temp dist/'+str(i)+'.pkl'
             self.plots.append(pd.read_pickle(n))
             os.remove(n)
+        
+        os.remove('temp dist/Names.pkl')
+
             
             
         itm = self.plots[0].columns
@@ -633,7 +636,7 @@ class DistWindow(QWidget):
             for i in range(0,len(self.plots)):
                 c = next(color)
                 sns.kdeplot(data=self.plots[i], x=col, ax = ax, label = self.names[i], linewidth = 2, c= c)
-                ax.legend()
+                ax.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0)
         self.d_ui.canvas.draw()
         
     def dotplot(self):
@@ -653,7 +656,7 @@ class DistWindow(QWidget):
             
             sns.scatterplot(x=c1, y=c2, data=self.plots[i], ax=ax,s=3, color=c,label = self.names[i])
             
-        ax.legend()
+        ax.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0)
         self.d_ui.canvas2.draw()
             
 
