@@ -139,7 +139,7 @@ class ColorWindow(QWidget):
             ax = self.canvas.figure.subplots()
             sns.scatterplot(x='tsne_1', y='tsne_2', hue='label', data=tsne_result_df, ax=ax,s=5, palette = "icefire")
             ax.set_aspect('equal')
-            ax.legend(bbox_to_anchor=(1.05, 1,), loc=2, borderaxespad=0.0,framealpha=0.99)
+            ax.legend(bbox_to_anchor=(1.05, 1,), loc=2, borderaxespad=0.0,framealpha=0.99,markerscale=5)
             ax.xaxis.set_major_locator(ticker.NullLocator())
             ax.yaxis.set_major_locator(ticker.NullLocator())
             self.canvas.draw()
@@ -566,7 +566,8 @@ class DistWindow(QWidget):
             self.d_ui.cb2_platform.addItem(i)
             self.d_ui.cb3_platform.addItem(i)
         
-        self.d_ui.cb_platform.addItem("Number of events")    
+        self.d_ui.cb_platform.addItem("Number of events") 
+        self.d_ui.cb_platform.addItem("Heatmap")     
            
         
         self.d_ui.cb_platform.activated.connect(self.draw)
@@ -631,6 +632,28 @@ class DistWindow(QWidget):
             sns.barplot(df_n_e, y="Area", x="# events", ax = ax, hue="Area", legend=False)
             
             
+        elif col == "Heatmap":
+
+            df_ls, n_a = [], []
+
+            for i in range(0,len(self.plots)):
+                n_a.append(self.names[i])
+                _u = self.plots[i].copy() 
+                _u = _u.drop('id', axis=1)
+                _u = _u.drop('tsne_1', axis=1)
+                _u = _u.drop('tsne_2', axis=1)
+                _u = _u.drop('p', axis=1)
+                df_ls.append(_u.median().to_frame())
+
+            cnct = df_ls[0]
+            for i in range(1,len(df_ls)):
+                cnct = pd.concat([cnct, df_ls[i]], axis="columns")
+
+            cnct.columns = n_a
+            cnct = cnct.T
+
+            sns.heatmap(cnct, cmap = 'hot', vmin = 0, vmax = 1, square=True, ax = ax).set(xlabel='', ylabel='')
+            
 
         else:
             for i in range(0,len(self.plots)):
@@ -656,7 +679,7 @@ class DistWindow(QWidget):
             
             sns.scatterplot(x=c1, y=c2, data=self.plots[i], ax=ax,s=3, color=c,label = self.names[i])
             
-        ax.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0)
+        ax.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0, markerscale=5)
         self.d_ui.canvas2.draw()
             
 
