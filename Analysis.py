@@ -599,7 +599,7 @@ class DistWindow(QWidget):
         cnct.columns = self.n_a
         cnct = cnct.T
 
-        cnct.to_pickle("Results/Heatmap.pkl")
+        cnct.to_pickle("temp/Heatmap.pkl")
         
         
     def savefig1(self):
@@ -689,7 +689,7 @@ class HeatWindow(QWidget):
         self.setLayout(layout)
         
         
-        self.cnct = pd.read_pickle("Results/Heatmap.pkl")
+        self.cnct = pd.read_pickle("temp/Heatmap.pkl")
 
         col = self.cnct.columns.values.tolist()
         self.listCheckBox = col
