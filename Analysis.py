@@ -652,7 +652,7 @@ class DistWindow(QWidget):
             cnct.columns = n_a
             cnct = cnct.T
 
-            sns.heatmap(cnct, cmap = 'hot', vmin = 0, vmax = 1, square=True, ax = ax).set(xlabel='', ylabel='')
+            sns.heatmap(cnct, cmap = 'hot', vmin = 0, vmax = 1, square=True, ax = ax, xticklabels=1, yticklabels=1).set(xlabel='', ylabel='')
             
 
         else:
