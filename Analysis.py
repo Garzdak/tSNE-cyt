@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QFileDialog,QComboBox, QWidget, QGridLayout, QPushButton,QLabel
+from PyQt5.QtWidgets import QApplication, QFileDialog,QComboBox, QWidget, QGridLayout, QPushButton,QLabel,QCheckBox
 from pathlib import Path
 import matplotlib.ticker as ticker
 from PyQt5.QtCore import Qt
@@ -541,18 +541,21 @@ class DistWindow(QWidget):
         self.d_ui.setupUi(self)
         
         
-        ct = len(os.listdir('temp dist'))
-        
         self.plots=[]
         self.names = pd.read_pickle('temp dist/Names.pkl')['Names'].to_list()
+
+        os.remove('temp dist/Names.pkl')
     
-        
-        for i in range(0,ct-1):
+        ct = len(os.listdir('temp dist'))
+        for i in range(0,ct):
             n = 'temp dist/'+str(i)+'.pkl'
             self.plots.append(pd.read_pickle(n))
             os.remove(n)
         
-        os.remove('temp dist/Names.pkl')
+        try:
+            os.remove('temp/Heatmap.pkl')
+        except:
+            print('no temp')
 
             
             
@@ -566,9 +569,7 @@ class DistWindow(QWidget):
             self.d_ui.cb2_platform.addItem(i)
             self.d_ui.cb3_platform.addItem(i)
         
-        self.d_ui.cb_platform.addItem("Number of events") 
-        self.d_ui.cb_platform.addItem("Heatmap")     
-           
+        self.d_ui.cb_platform.addItem("Number of events")            
         
         self.d_ui.cb_platform.activated.connect(self.draw)
         self.d_ui.cb2_platform.activated.connect(self.dotplot)
@@ -578,6 +579,27 @@ class DistWindow(QWidget):
         self.d_ui.savefig1_button.clicked.connect(self.savefig1)
         self.d_ui.savefig2_button.clicked.connect(self.savefig2)
 
+        self.d_ui.heat_button.clicked.connect(self.heatmap)
+
+        df_ls, self.n_a = [], []
+
+        for i in range(0,len(self.plots)):
+            self.n_a.append(self.names[i])
+            _u = self.plots[i].copy() 
+            _u = _u.drop('id', axis=1)
+            _u = _u.drop('tsne_1', axis=1)
+            _u = _u.drop('tsne_2', axis=1)
+            _u = _u.drop('p', axis=1)
+            df_ls.append(_u.median().to_frame())
+
+        cnct = df_ls[0]
+        for i in range(1,len(df_ls)):
+            cnct = pd.concat([cnct, df_ls[i]], axis="columns")
+
+        cnct.columns = self.n_a
+        cnct = cnct.T
+
+        cnct.to_pickle("Results/Heatmap.pkl")
         
         
     def savefig1(self):
@@ -591,10 +613,7 @@ class DistWindow(QWidget):
             return
          
         # saving canvas at desired path
-        self.d_ui.canvas.print_figure(filePath)    
-
-
-        
+        self.d_ui.canvas.print_figure(filePath)        
         
     def savefig2(self):
          
@@ -626,34 +645,9 @@ class DistWindow(QWidget):
             ln, n_a = [],[]
             for i in range(0,len(self.plots)):
                 ln.append(len(self.plots[i]))
-                n_a.append(self.names[i])
-            n_e = {'Area': n_a, '# events': ln}
+            n_e = {'Area': self.n_a, '# events': ln}
             df_n_e = pd.DataFrame(n_e)
             sns.barplot(df_n_e, y="Area", x="# events", ax = ax, hue="Area", legend=False)
-            
-            
-        elif col == "Heatmap":
-
-            df_ls, n_a = [], []
-
-            for i in range(0,len(self.plots)):
-                n_a.append(self.names[i])
-                _u = self.plots[i].copy() 
-                _u = _u.drop('id', axis=1)
-                _u = _u.drop('tsne_1', axis=1)
-                _u = _u.drop('tsne_2', axis=1)
-                _u = _u.drop('p', axis=1)
-                df_ls.append(_u.median().to_frame())
-
-            cnct = df_ls[0]
-            for i in range(1,len(df_ls)):
-                cnct = pd.concat([cnct, df_ls[i]], axis="columns")
-
-            cnct.columns = n_a
-            cnct = cnct.T
-
-            sns.heatmap(cnct, cmap = 'hot', vmin = 0, vmax = 1, square=True, ax = ax, xticklabels=1, yticklabels=1).set(xlabel='', ylabel='')
-            
 
         else:
             for i in range(0,len(self.plots)):
@@ -681,7 +675,71 @@ class DistWindow(QWidget):
             
         ax.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0, markerscale=5)
         self.d_ui.canvas2.draw()
-            
+
+    def heatmap(self):
+
+        self.w4 = HeatWindow() 
+        self.w4.show()
+
+class HeatWindow(QWidget):
+
+    def __init__(self):
+        super().__init__()
+        layout = QGridLayout()
+        self.setLayout(layout)
+        
+        
+        self.cnct = pd.read_pickle("Results/Heatmap.pkl")
+
+        col = self.cnct.columns.values.tolist()
+        self.listCheckBox = col
+
+        for i, v in enumerate(self.listCheckBox):
+            self.listCheckBox[i] = QCheckBox(v)
+            self.listCheckBox[i].setChecked(True) 
+            layout.addWidget(self.listCheckBox[i], i, 0)
+
+        self.canvas = FigureCanvas(Figure(tight_layout=True))        
+        
+        layout.addWidget(self.canvas,i+1,0)
+        
+        self.plot_button = QPushButton('Plot heatmap')
+        layout.addWidget(self.plot_button,i+2,0)   
+
+        self.savefig_button = QPushButton('Save Figure')
+        layout.addWidget(self.savefig_button,i+3,0)    
+        
+        self.savefig_button.clicked.connect(self.savefig)
+        self.plot_button.clicked.connect(self.plot)
+    
+    def plot(self):
+        chkd = []
+        for i, v in enumerate(self.listCheckBox):
+            if v.checkState():
+                chkd.append(v.text())
+
+        _cnct = self.cnct.copy()
+        _cnct = _cnct[chkd]
+
+        self.canvas.figure.clf()
+        self.ax = self.canvas.figure.subplots(nrows=1, ncols=1)
+
+        sns.heatmap(_cnct, cmap = 'hot', vmin = 0, vmax = 1, square=True, ax = self.ax, xticklabels=1, yticklabels=1).set(xlabel='', ylabel='')
+
+        self.canvas.draw()
+
+    def savefig(self):
+         
+        # selecting file path
+        filePath, _ = QFileDialog.getSaveFileName(self, "Save Image", "",
+                         "PNG(*.png);;JPEG(*.jpg *.jpeg);;All Files(*.*) ")
+ 
+        # if file path is blank return back
+        if filePath == "":
+            return
+         
+        # saving canvas at desired path
+        self.canvas.print_figure(filePath)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

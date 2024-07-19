@@ -244,19 +244,22 @@ class Ui_D_a_Window(object):
            
         layout.addWidget(QLabel('Select parameter of interest :'), 0, 0)
         layout.addWidget(self.cb_platform, 1, 0)
-        layout.addWidget(QLabel('Select axis for dotplot :'), 4, 0)
-        layout.addWidget(self.cb2_platform, 5, 0)
-        layout.addWidget(self.cb3_platform, 6, 0)
+        layout.addWidget(QLabel('Select axis for dotplot :'), 5, 0)
+        layout.addWidget(self.cb2_platform, 6, 0)
+        layout.addWidget(self.cb3_platform, 7, 0)
         self.canvas = FigureCanvas(Figure(dpi = 150))
         layout.addWidget(self.canvas, 2,0)
         
         self.canvas2 = FigureCanvas(Figure(dpi = 150))
-        layout.addWidget(self.canvas2, 7,0)
+        layout.addWidget(self.canvas2, 8,0)
         
         self.savefig1_button = QPushButton('Save Figure')
         layout.addWidget(self.savefig1_button,3,0)
 
+        self.heat_button = QPushButton('Plot heatmap')
+        layout.addWidget(self.heat_button,4,0)
+
         self.savefig2_button = QPushButton('Save Figure')
-        layout.addWidget(self.savefig2_button,8,0)
+        layout.addWidget(self.savefig2_button,9,0)
         
         
