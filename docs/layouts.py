@@ -79,15 +79,37 @@ class Ui_analysWindow(object):
         self.delt = QPushButton('Clear selection')
 
         self.file_browse = QPushButton('Select file')
+
+        self.tag = QPushButton('Create tags')
         
         
         layout.addWidget(QLabel('Name output file:'), 0, 0)
         layout.addWidget(self.inp, 1, 0)
         layout.addWidget(self.file_browse, 2, 0)
         layout.addWidget(self.delt, 3, 0)
-        layout.addWidget(self.clr, 4, 0)
-        layout.addWidget(self.sep, 5, 0)
-        layout.addWidget(self.sel, 6, 0)
+        layout.addWidget(self.tag, 4, 0)
+        layout.addWidget(self.clr, 5, 0)
+        layout.addWidget(self.sep, 6, 0)
+        layout.addWidget(self.sel, 7, 0)
+
+class Ui_TagWindow(object):
+    def setupUi(self, TagWindow):
+        TagWindow.setWindowTitle('Tagging')
+        TagWindow.setGeometry(100, 100, 400, 100)
+        layout = QGridLayout()
+        TagWindow.setLayout(layout)
+
+        self.inp = QListWidget(TagWindow)
+        
+        self.delt = QPushButton('Clear selection')
+        self.file_browse = QPushButton('Select file')
+        
+        
+        layout.addWidget(QLabel('Name file for tagging:'), 0, 0)
+        layout.addWidget(self.inp, 1, 0)
+        layout.addWidget(self.file_browse, 2, 0)
+        layout.addWidget(self.delt, 3, 0)
+
 
 class Ui_S_a_Window(object):
 

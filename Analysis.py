@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QFileDialog,QComboBox, QWidget, QGridLayout, QPushButton,QLabel,QCheckBox
+from PyQt5.QtWidgets import QApplication, QFileDialog,QComboBox, QWidget, QGridLayout, QPushButton,QLabel,QCheckBox, QLineEdit,QVBoxLayout, QFormLayout, QHBoxLayout
 from pathlib import Path
 import matplotlib.ticker as ticker
 from PyQt5.QtCore import Qt
@@ -15,7 +15,7 @@ import xlsxwriter
 
 from matplotlib.pyplot import cm
 
-from docs.layouts import Ui_analysWindow, Ui_S_a_Window, Ui_C_a_Window, Ui_D_a_Window
+from docs.layouts import Ui_analysWindow, Ui_S_a_Window, Ui_C_a_Window, Ui_D_a_Window, Ui_TagWindow
 
 import os
 
@@ -25,7 +25,8 @@ class MainWindow(QWidget):
         super().__init__(*args, **kwargs)
         self.w = None
         self.w1 = None
-        self.w2 = None  	
+        self.w2 = None  
+        self.w3 = None  	
         
         self.ui = Ui_analysWindow()
         self.ui.setupUi(self)
@@ -35,6 +36,7 @@ class MainWindow(QWidget):
         self.ui.sep.clicked.connect(self.sep_gr)
         self.ui.sel.clicked.connect(self.comp_c)
         self.ui.delt.clicked.connect(self.delt_f)
+        self.ui.tag.clicked.connect(self.tags)
         self.ui.file_browse.clicked.connect(self.open_file_dialog)
         
         if not os.path.exists('temp'):
@@ -63,7 +65,11 @@ class MainWindow(QWidget):
         X1 = pd.read_pickle(self.ui.inp.item(0).text())
         X1.to_pickle("temp/_temp2.pkl")
         
-        
+    def tags(self):
+        self.w3 = TagWindow()
+        self.w3.show()               
+
+
     def delt_f(self):
         self.ui.inp.clear() 
         
@@ -79,6 +85,55 @@ class MainWindow(QWidget):
     def comp_c(self):
         self.w2 = CompareWindow()
         self.w2.show()        
+
+class TagWindow(QWidget):
+
+    def __init__(self):
+        super().__init__()
+
+
+        self.Xn = pd.read_pickle("temp/_temp2.pkl")
+
+        self.smpl = self.Xn['id'].unique()
+
+        self.setWindowTitle("Tagging")
+        self.controls = []
+
+        save_but = QPushButton('Save', self)
+        save_but.clicked.connect(self.save)
+        self.outp = QLineEdit(self)
+
+        vbox = QVBoxLayout()
+        formlayout = QFormLayout()
+        vbox.addLayout(formlayout)
+        hbox = QHBoxLayout()
+        vbox.addLayout(hbox)
+        vbox.addWidget(QLabel("Name the tagged file"))
+        vbox.addWidget(self.outp)
+        vbox.addWidget(save_but)
+        self.setLayout(vbox)
+        self.formlayout = formlayout
+ 
+        for i in range(0,len(self.smpl)):
+            edit = QLineEdit(self)
+            self.controls.append(edit)
+            self.formlayout.addRow(str(self.smpl[i]), edit)
+ 
+    def save(self):
+        out = self.outp.text()
+        values = []
+
+        for i in range(0,len(self.smpl)):
+            values.append(self.controls[i].text())
+
+
+        dictionary = dict(zip(self.smpl, values))
+
+        Xnn = self.Xn.copy()
+        Xnn['tag'] = Xnn['id'].map(dictionary)
+
+        Xnn.to_pickle("Results/"+str(out)+".pkl")
+
 
 class ColorWindow(QWidget):
 
