@@ -134,7 +134,6 @@ class TagWindow(QWidget):
 
         Xnn.to_pickle("Results/"+str(out)+".pkl")
 
-
 class ColorWindow(QWidget):
 
     def __init__(self):
@@ -374,6 +373,8 @@ class CompareWindow(QWidget):
 
         for i in pop:
             self.c_ui.cb_platform.addItem(i)
+        
+        self.c_ui.cb_platform.addItem("Whole t-SNE")
             
         self.c_ui.cb_platform.activated.connect(self.dr1)
         
@@ -449,10 +450,16 @@ class CompareWindow(QWidget):
         self.c_ui.canvas1.figure.clf()
         
         self.ax = self.c_ui.figure.subplots()
-        
-        Xctr = Xn.loc[Xn['id'] == pop]
+
+        if pop == "Whole t-SNE":
+
+            Xctr = Xn.copy()
+        else:
+            Xctr = Xn.loc[Xn['id'] == pop]
         
         self.slg = Xctr
+
+
     
         if self.c_ui.rb_kde.isChecked():
             sns.kdeplot(x='tsne_1', y='tsne_2', data=Xctr, ax=self.ax,fill=True, thresh = 0.01, color = 'red')
@@ -554,7 +561,15 @@ class CompareWindow(QWidget):
         
         Xn = self.tr
         pop = self.c_ui.cb_platform.currentText()
-        Xctr = Xn.loc[Xn['id'] == pop]
+
+        if pop == "Whole t-SNE":
+
+            Xctr = Xn.copy()
+        else:
+            Xctr = Xn.loc[Xn['id'] == pop]
+        
+        self.slg = Xctr
+
         
         X1 = Xctr.copy()
         X1['p'] = list(map(self.inellipse, X1['tsne_1'], X1['tsne_2']))
@@ -614,17 +629,27 @@ class DistWindow(QWidget):
 
             
             
-        itm = self.plots[0].columns
+        itm = (self.plots[0].columns).to_list()
         
-        itm = itm[:-4]
+        itm1 = itm[:-4]
+
+
+        try:
+            itm1.remove('id')
+        except Exception:
+            pass
         
         
-        for i in itm:
+        for i in itm1:
             self.d_ui.cb_platform.addItem(i)
             self.d_ui.cb2_platform.addItem(i)
             self.d_ui.cb3_platform.addItem(i)
         
-        self.d_ui.cb_platform.addItem("Number of events")            
+        self.d_ui.cb_platform.addItem("Number of events")     
+
+
+        if 'tag' in itm:
+            self.d_ui.cb_platform.addItem("Tag distribution")        
         
         self.d_ui.cb_platform.activated.connect(self.draw)
         self.d_ui.cb2_platform.activated.connect(self.dotplot)
@@ -707,11 +732,43 @@ class DistWindow(QWidget):
             df_n_e = pd.DataFrame(n_e)
             sns.barplot(df_n_e, y="Area", x="# events", ax = ax, hue="Area", legend=False)
 
+        elif col == "Tag distribution":
+            cnts = []
+            for i in range(0,len(self.plots)):
+                _df = self.plots[i].value_counts("tag").to_frame()
+                _df['ind'] = self.n_a[i]
+                cnts.append(_df)
+            res = pd.concat(cnts)
+            res['tag']=res.index
+            res = res.set_index('ind')
+
+            groups = self.n_a
+            t_lst = res['tag'].unique().tolist()
+            nlst = []
+            for i in range(0,len(t_lst)):
+                nlst.append([])
+                for j in range(0,len(self.plots)):
+                    try:
+                        nlst[i].append(self.plots[j]['tag'].value_counts()[t_lst[i]])
+                    except:
+                        nlst[i].append(0)
+
+            ax.bar(groups, nlst[0])
+            m = nlst[0]
+            for i in range(1,len(t_lst)):
+                ax.bar(groups, nlst[i], bottom = m)
+                res_list = []
+                for k in range(0, len(self.plots)):
+                    res_list.append(m[k] + nlst[i][k])
+                m = res_list
+                ax.legend(t_lst,bbox_to_anchor=(1.01, 1), borderaxespad=0)
+            
         else:
             for i in range(0,len(self.plots)):
                 c = next(color)
                 sns.kdeplot(data=self.plots[i], x=col, ax = ax, label = self.names[i], linewidth = 2, c= c)
                 ax.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0)
+
         self.d_ui.canvas.draw()
         
     def dotplot(self):
