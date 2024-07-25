@@ -192,7 +192,7 @@ class ColorWindow(QWidget):
             
             tsne_result_df = pd.DataFrame({'tsne_1': Xn['tsne_1'].values.tolist(), 'tsne_2': Xn['tsne_2'].values.tolist(), 'label': y})
             ax = self.canvas.figure.subplots()
-            sns.scatterplot(x='tsne_1', y='tsne_2', hue='label', data=tsne_result_df, ax=ax,s=5, palette = "icefire")
+            sns.scatterplot(x='tsne_1', y='tsne_2', hue='label', data=tsne_result_df, ax=ax,s=5, palette = "icefire",alpha = 0.7)
             ax.set_aspect('equal')
             ax.legend(bbox_to_anchor=(1.05, 1,), loc=2, borderaxespad=0.0,framealpha=0.99,markerscale=5)
             ax.xaxis.set_major_locator(ticker.NullLocator())
@@ -645,7 +645,10 @@ class DistWindow(QWidget):
             _u = _u.drop('tsne_1', axis=1)
             _u = _u.drop('tsne_2', axis=1)
             _u = _u.drop('p', axis=1)
+            _u = _u._get_numeric_data()
             df_ls.append(_u.median().to_frame())
+
+
 
         cnct = df_ls[0]
         for i in range(1,len(df_ls)):
