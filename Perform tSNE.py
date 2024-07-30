@@ -1,11 +1,9 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget,QListWidgetItem,QAbstractItemView, QGridLayout, QLineEdit, QPushButton, QListWidget,QLabel
 from pathlib import Path
+from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget,QListWidgetItem, QGridLayout, QPushButton,QLabel
 import matplotlib.ticker as ticker
-import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn.preprocessing import StandardScaler
 import flowkit as fk
 from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.figure import Figure
@@ -14,10 +12,11 @@ from docs.layouts import Ui_appMainWindow
 from docs.functions import cr_df, tsne # type: ignore
 
 class MainWindow(QWidget):
+    """Class representing Main window for tSNE"""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.w = None
-        
         self.ui = Ui_appMainWindow()
         self.ui.setupUi(self)
 
@@ -27,7 +26,6 @@ class MainWindow(QWidget):
         self.ui.comp_browse_cl.clicked.connect(self.cl_comp)
         self.ui.Next_but.clicked.connect(self.forward_button_clicked)
         self.ui.Run_but.clicked.connect(self.run_button_clicked)
-        
 
         if not os.path.exists('temp'):
             os.mkdir('temp')
@@ -165,6 +163,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = MainWindow()
     sys.exit(app.exec())
-    
 
-    
+# End-of-file (EOF)

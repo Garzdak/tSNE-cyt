@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication,QSlider,QComboBox,QAbstractItemView, QGridLayout, QLineEdit, QPushButton,QButtonGroup, QListWidget,QLabel, QRadioButton
+from PyQt5.QtWidgets import QSlider,QComboBox,QAbstractItemView, QGridLayout, QLineEdit, QPushButton,QButtonGroup, QListWidget,QLabel, QRadioButton
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
@@ -91,25 +91,6 @@ class Ui_analysWindow(object):
         layout.addWidget(self.clr, 5, 0)
         layout.addWidget(self.sep, 6, 0)
         layout.addWidget(self.sel, 7, 0)
-
-class Ui_TagWindow(object):
-    def setupUi(self, TagWindow):
-        TagWindow.setWindowTitle('Tagging')
-        TagWindow.setGeometry(100, 100, 400, 100)
-        layout = QGridLayout()
-        TagWindow.setLayout(layout)
-
-        self.inp = QListWidget(TagWindow)
-        
-        self.delt = QPushButton('Clear selection')
-        self.file_browse = QPushButton('Select file')
-        
-        
-        layout.addWidget(QLabel('Name file for tagging:'), 0, 0)
-        layout.addWidget(self.inp, 1, 0)
-        layout.addWidget(self.file_browse, 2, 0)
-        layout.addWidget(self.delt, 3, 0)
-
 
 class Ui_S_a_Window(object):
 

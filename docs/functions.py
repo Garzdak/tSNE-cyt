@@ -1,14 +1,8 @@
-from pathlib import Path
-import matplotlib.ticker as ticker
 import numpy as np
 import pandas as pd
 from sklearn.manifold import TSNE
-import seaborn as sns
 from sklearn.preprocessing import StandardScaler
 import flowkit as fk
-from matplotlib.backends.backend_qt5agg import FigureCanvas
-from matplotlib.figure import Figure
-
 
 
 def cr_df(pop, comp_c,dsp,comp):
@@ -52,9 +46,8 @@ def tsne(Xn,val,px,it):
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(Xn[val])
     n_components = 2
-    tsne = TSNE(n_components, perplexity = px, n_iter=it)
-    tsne_result = tsne.fit_transform(X_scaled)
-        
+    _tsne = TSNE(n_components, perplexity = px, n_iter=it)
+    tsne_result = _tsne.fit_transform(X_scaled)
     Xn['tsne_1'] = tsne_result[:,0]
     Xn['tsne_2'] = tsne_result[:,1]
 

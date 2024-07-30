@@ -1,12 +1,11 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QFileDialog,QComboBox, QWidget, QGridLayout, QPushButton,QLabel,QCheckBox, QLineEdit,QVBoxLayout, QFormLayout, QHBoxLayout
 from pathlib import Path
+from PyQt5.QtWidgets import QApplication, QFileDialog,QComboBox, QWidget, QGridLayout, QPushButton,QLabel,QCheckBox, QLineEdit,QVBoxLayout, QFormLayout, QHBoxLayout
 import matplotlib.ticker as ticker
-from PyQt5.QtCore import Qt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, FigureCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
@@ -15,10 +14,9 @@ import xlsxwriter
 
 from matplotlib.pyplot import cm
 
-from docs.layouts import Ui_analysWindow, Ui_S_a_Window, Ui_C_a_Window, Ui_D_a_Window, Ui_TagWindow
+from docs.layouts import Ui_analysWindow, Ui_S_a_Window, Ui_C_a_Window, Ui_D_a_Window
 
 import os
-
 
 class MainWindow(QWidget):
     def __init__(self, *args, **kwargs):
