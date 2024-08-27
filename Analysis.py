@@ -97,16 +97,14 @@ class TagWindow(QWidget):
         vbox.addWidget(save_but)
         self.setLayout(vbox)
         self.formlayout = formlayout
-        for i, smpl_val in enumerate(self.smpl):
+        for smpl_val in self.smpl:
             edit = QLineEdit(self)
             self.controls.append(edit)
             self.formlayout.addRow(str(smpl_val), edit)
     def save(self):
         """Save tags into file"""
         out = self.outp.text()
-        values = []
-        for i, smpl_val in enumerate(self.smpl):
-            values.append(self.controls[i].text())
+        values = [x.text() for x in self.controls]
         dictionary = dict(zip(self.smpl, values))
         xnn = self.xn.copy()
         xnn['tag'] = xnn['id'].map(dictionary)
@@ -533,10 +531,9 @@ class DistWindow(QWidget):
         itm1 = itm[:-4]
 
 
-        try:
+        if 'id' in itm1:
             itm1.remove('id')
-        except AttributeError:
-            pass
+            
         for i in itm1:
             self.d_ui.cb_platform.addItem(i)
             self.d_ui.cb2_platform.addItem(i)
@@ -545,7 +542,7 @@ class DistWindow(QWidget):
 
         if 'tag' in itm:
             self.d_ui.cb_platform.addItem("Tag distribution")
-            self.d_ui.cb_platform.activated.connect(self.draw)
+        self.d_ui.cb_platform.activated.connect(self.draw)
         self.d_ui.cb2_platform.activated.connect(self.dotplot)
         self.d_ui.cb3_platform.activated.connect(self.dotplot)
         self.d_ui.savefig1_button.clicked.connect(self.savefig1)
@@ -605,9 +602,7 @@ class DistWindow(QWidget):
         ax = self.d_ui.canvas.figure.subplots()
         color = iter(cm.rainbow(np.linspace(0, 1, len(self.plots))))
         if col == "Number of events":
-            ln = []
-            for i, plots_val in enumerate(self.plots):
-                ln.append(len(plots_val))
+            ln = [len(x) for x in self.plots]
             n_e = {'Area': self.n_a, '# events': ln}
             df_n_e = pd.DataFrame(n_e)
             sns.barplot(df_n_e, y="Area", x="# events", ax = ax, hue="Area", legend=False)
@@ -650,6 +645,8 @@ class DistWindow(QWidget):
                 ax.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0)
 
         self.d_ui.canvas.draw()
+
+        
     def dotplot(self):
         """Plot the dotplot"""
         c1 = self.d_ui.cb2_platform.currentText()
